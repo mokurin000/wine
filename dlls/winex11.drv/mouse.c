@@ -1725,25 +1725,6 @@ static BOOL map_raw_event_coords( XIRawEvent *event, INPUT *input )
  */
 static BOOL X11DRV_RawMotion( XGenericEventCookie *xev )
 {
-    XIRawEvent *event = xev->data;
-    INPUT input;
-
-    if (broken_rawevents && is_old_motion_event( xev->serial ))
-    {
-        TRACE( "old serial %lu, ignoring\n", xev->serial );
-        return FALSE;
-    }
-
-    input.type = INPUT_MOUSE;
-    input.mi.mouseData   = 0;
-    input.mi.dwFlags     = MOUSEEVENTF_MOVE;
-    input.mi.time        = EVENT_x11_time_to_win32_time( event->time );
-    input.mi.dwExtraInfo = 0;
-    input.mi.dx          = 0;
-    input.mi.dy          = 0;
-    if (!map_raw_event_coords( event, &input )) return FALSE;
-
-    NtUserSendHardwareInput( 0, 0, &input, 0 );
     return TRUE;
 }
 
